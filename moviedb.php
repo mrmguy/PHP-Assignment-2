@@ -8,11 +8,8 @@
 
   //connect to database
 
-  $mysqli = new mysqli("localhost", "root", "", "trialdb");
-  if ($mysqli->connect_errno) {
-    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-  }
-
+include("sqldb.php");
+  
 // table creation statement
 
 $sqt = "CREATE TABLE video_store (
@@ -21,7 +18,7 @@ $sqt = "CREATE TABLE video_store (
     category varchar(255),
     length int,
     rented bool NOT NULL DEFAULT 1
-    );";
+    ) TYPE=innodb;";
 
 // if table exist do not create
 
@@ -88,6 +85,8 @@ echo '<option value = "All">All</option>';
 }
 echo '<input type = "submit">';
 echo '</form>';
+
+echo 'you are currently displaying ' . $_SESSION['category_table'];
 
 
 

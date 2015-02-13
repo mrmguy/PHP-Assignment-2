@@ -2,10 +2,7 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display-errors', 'On');
-$mysqli = new mysqli("localhost", "root", "", "trialdb");
-if ($mysqli->connect_errno) {
-  echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-}
+include("sqldb.php");
 $name = $_POST['name']; // get name of movie to take action on
 
 // toggle availability of movie
@@ -33,7 +30,6 @@ if (isset($_POST['check'])) {
     echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
   }
   $name = $_POST['name'];
-  echo $name;
   if (!$stmt->bind_param("s", $name)) {
     echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
   }

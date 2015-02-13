@@ -3,10 +3,11 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display-errors', 'On');
 $testNumber = TRUE;
-$mysqli = new mysqli("localhost", "root", "", "trialdb");
-if ($mysqli->connect_errno) {
-  echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-}
+include("sqldb.php");
+// $mysqli = new mysqli("localhost", "root", "", "trialdb");
+// if ($mysqli->connect_errno) {
+//   echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+// }
 if (!($stmt = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
      echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
