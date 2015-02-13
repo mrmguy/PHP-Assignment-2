@@ -1,70 +1,59 @@
 <?php
-  error_reporting(E_ALL);
-  ini_set('display-errors', 'On');
+  //session_start();
+error_reporting(E_ALL);
+ini_set('display-errors', 'On');
+$testNumber = TRUE;
 $mysqli = new mysqli("localhost", "root", "", "trialdb");
 if ($mysqli->connect_errno) {
-    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+  echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
-/* Prepared statement, stage 1: prepare */
 if (!($stmt = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
      echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
 
-//convert $_POST
+//check that name exists
 
-//check that all values exist
-
-  foreach ($_POST as $key => $value) {
-    if (empty($value)) {
-      echo "Missing parameter - " . $key;
-      echo '<br>';
-      $testNumber = False;
-    }
-  }
-
+if (empty($_POST['name'])) {
+  echo "Missing parameter - " . $key;
   echo '<br>';
+  $testNumber = False;
+  }
 
 //check if minutes valid value
 
 if (!ctype_digit($_POST['minutes'])) {
-      echo $key . " must be a length of minutes";
-      echo '<br>';
-  }
-  
+  echo $key . " must be a length of minutes";
   echo '<br>';
+  $testNumber = False;
+}
 
+//check if minutes negative
 
-$name = $_POST['name'];
-$category = $_POST['category'];
-$minutes = $_POST['minutes'];
+if (($_POST['minutes'] < 1)) {
+  echo $key . " must be positive";
+  echo '<br>';
+  $testNumber = False;
+}
 
+// add movie if valid input parameters
 
-/* Prepared statement, stage 2: bind and execute */
+if ($testNumber) {
+  $name = $_POST['name'];
+  $category = $_POST['category'];
+  $minutes = $_POST['minutes'];
 
-if (!$stmt->bind_param("ssi", $name, $category, $minutes)) {
+  if (!$stmt->bind_param("ssi", $name, $category, $minutes)) {
     echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-}
-
-if (!$stmt->execute()) {
+  }
+  if (!$stmt->execute()) {
     echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+  }
+  $mysqli->close();
+  header('Location: moviedb.php');
+  }
+else {
+  echo "Click <a href = 'moviedb.php'> here</a> to return to the entry screen and try again";
+  $mysqli->close();
 }
 
-
-// /* Prepared statement: repeated execution, only data transferred from client to server */
-// for ($id = 2; $id < 5; $id++) {
-//     if (!$stmt->execute()) {
-//         echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-//     }
-// }
-
-// /* explicit close recommended */
-// $stmt->close();
-
-// /* Non-prepared statement */
-// $res = $mysqli->query("SELECT id FROM test");
-// var_dump($res->fetch_all
-
-
-$mysqli->close();
-header('Location: moviedb.php');
 ?>

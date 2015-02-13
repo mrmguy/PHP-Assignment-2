@@ -1,10 +1,16 @@
 <?php
+  //session_start();
   error_reporting(E_ALL);
   ini_set('display-errors', 'On');
-$mysqli = new mysqli("localhost", "root", "", "trialdb");
-if ($mysqli->connect_errno) {
+
+  //connect to database
+
+  $mysqli = new mysqli("localhost", "root", "", "trialdb");
+  if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-}
+  }
+
+// table creation statement
 
 $sqt = "CREATE TABLE video_store (
     id int AUTO_INCREMENT PRIMARY KEY,
@@ -14,12 +20,12 @@ $sqt = "CREATE TABLE video_store (
     rented bool NOT NULL DEFAULT 1
     );";
 
-if (!$mysqli->query('DESCRIBE video_store')) {
+// if table exist do not create
 
-/* Non-prepared statement */
-if (!$mysqli->query($sqt)) {
-    echo "Table creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
-}
+if (!$mysqli->query('DESCRIBE video_store')) {
+    if (!$mysqli->query($sqt)) {
+        echo "Table creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+    }
 }
 ?>
 
@@ -29,6 +35,9 @@ if (!$mysqli->query($sqt)) {
 	<title>Video Store</title>
 </head>
 <body>
+
+<!-- form entry to add movie -->
+
 <form action="addmovie.php" method="post">
 <fieldset>
 	<legend>Enter a Film</legend>
@@ -53,39 +62,28 @@ if (!$mysqli->query($sqt)) {
 </html>
 <?php
 
+// category drop down menu
 
-// select categories for drop down menu
-if (!($stmt2 = $mysqli->prepare("SELECT category FROM video_store"))) {
-    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+if (!($stmt2 = $mysqli->prepare("SELECT DISTINCT category FROM video_store ORDER BY category ASC"))) {
+  echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
-
 if (!$stmt2->execute()) {
-    echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
+  echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
 $categorylist = NULL;
 if (!$stmt2->bind_result($categorylist)) {
-    echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+  echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 }
-
-echo '<form action="changetable.php" method="get">';
+echo '<form action="moviedb.php" method="post">';
 echo '<select name = "categories">';
 while ($stmt2->fetch()) {
-    echo '<option value = "' . $categorylist . '">' . $categorylist . '</option>';
+  echo '<option value = "' . $categorylist . '">' . $categorylist . '</option>';
 }
+echo '<option value = "All">All</option>';
 echo '<input type = "submit">';
 echo '</form>';
 
 
-
-
-// select films to list in table
-if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store"))) {
-    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
-}
-
-if (!$stmt->execute()) {
-    echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
-}
 
 $name    = NULL;
 $category = NULL;
@@ -93,10 +91,53 @@ $minutes = NULL;
 $rented = NULL;
 $available = NULL;
 $check = NULL;
-if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
-    echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-}
+$categories = NULL;
 
+// select films to list in table
+
+
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+//   if ($_POST['categories'] != 'All') {
+
+
+//     // query table with movies from select category
+
+//     if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store WHERE category = ?"))) {
+//       echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+//     }
+//     $categoryitem = $_POST['categories'];
+//     if (!$stmt->bind_param("s", $categoryitem)) {
+//       echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+//     }
+
+//     if (!$stmt->execute()) {
+//       echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
+//     }
+
+//     if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
+//       echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+//     }
+//   } 
+
+// else {
+
+    //query table with all movies
+
+  if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store"))) {
+    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+  }
+
+  if (!$stmt->execute()) {
+    echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
+  }
+
+  if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
+    echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+  }
+//}
+    
+// output table of movies
 
 echo '<p>';
   echo '<table border = 1>';
@@ -117,36 +158,6 @@ while ($stmt->fetch()) {
     echo '</form>';
 }
 
-// /* Prepared statement, stage 1: prepare */
-// if (!($stmt = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
-//      echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
-// }
-
-// /* Prepared statement, stage 2: bind and execute */
-// $name = 'test';
-// $category = 'comedy';
-// $length = 120;
-// if (!$stmt->bind_param("ssi", $name, $category, $length)) {
-//     echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-// }
-
-// if (!$stmt->execute()) {
-//     echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-// }
-
-// // /* Prepared statement: repeated execution, only data transferred from client to server */
-// // for ($id = 2; $id < 5; $id++) {
-// //     if (!$stmt->execute()) {
-// //         echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-// //     }
-// // }
-
-// // /* explicit close recommended */
-// // $stmt->close();
-
-// // /* Non-prepared statement */
-// // $res = $mysqli->query("SELECT id FROM test");
-// // var_dump($res->fetch_all
 
 
 $mysqli->close();
