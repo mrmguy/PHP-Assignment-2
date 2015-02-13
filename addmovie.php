@@ -1,5 +1,5 @@
 <?php
-  //session_start();
+session_start();
 error_reporting(E_ALL);
 ini_set('display-errors', 'On');
 $testNumber = TRUE;
@@ -14,26 +14,26 @@ if (!($stmt = $mysqli->prepare("INSERT INTO video_store(name, category, length) 
 //check that name exists
 
 if (empty($_POST['name'])) {
-  echo "Missing parameter - " . $key;
+  echo "Name is a required field";
   echo '<br>';
   $testNumber = False;
   }
 
 //check if minutes valid value
-
+if (!empty($_POST['minutes'])) {
 if (!ctype_digit($_POST['minutes'])) {
-  echo $key . " must be a length of minutes";
+  echo "length must be a positive number";
   echo '<br>';
   $testNumber = False;
 }
-
+}
 //check if minutes negative
 
-if (($_POST['minutes'] < 1)) {
-  echo $key . " must be positive";
-  echo '<br>';
-  $testNumber = False;
-}
+// if (($_POST['minutes'] < 1)) {
+//   echo "length must be positive";
+//   echo '<br>';
+//   $testNumber = False;
+// }
 
 // add movie if valid input parameters
 

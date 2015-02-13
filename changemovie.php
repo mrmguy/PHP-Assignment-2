@@ -1,5 +1,5 @@
 <?php
-  //session_start();
+session_start();
 error_reporting(E_ALL);
 ini_set('display-errors', 'On');
 $mysqli = new mysqli("localhost", "root", "", "trialdb");

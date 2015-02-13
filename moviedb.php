@@ -1,5 +1,8 @@
 <?php
-  //session_start();
+  session_start();
+  if (!isset($_SESSION['category_table'])) {
+      $_SESSION['category_table']= 'All';
+  }
   error_reporting(E_ALL);
   ini_set('display-errors', 'On');
 
@@ -56,6 +59,7 @@ if (!$mysqli->query('DESCRIBE video_store')) {
 
 <form action="deleteall.php">
 	<input type="submit" value="Delete all films">
+</form>
 
 
 </body>
@@ -74,7 +78,7 @@ $categorylist = NULL;
 if (!$stmt2->bind_result($categorylist)) {
   echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 }
-echo '<form action="moviedb.php" method="post">';
+echo '<form action="category.php" method="get">';
 echo '<select name = "categories">';
 while ($stmt2->fetch()) {
   echo '<option value = "' . $categorylist . '">' . $categorylist . '</option>';
@@ -95,34 +99,32 @@ $available = NULL;
 $check = NULL;
 
 
-// select films to list in table
+if ($_SESSION['category_table'] != 'All') {
 
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-//   if ($_POST['categories'] != 'All') {
+//select films to list in table
 
 
-//     // query table with movies from select category
+    // query table with movies from select category
 
-//     if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store WHERE category = ?"))) {
-//       echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
-//     }
-//     $categoryitem = $_POST['categories'];
-//     if (!$stmt->bind_param("s", $categoryitem)) {
-//       echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-//     }
+    if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store WHERE category = ?"))) {
+      echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+    }
+    $categoryitem = $_SESSION['category_table'];
+    if (!$stmt->bind_param("s", $categoryitem)) {
+      echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+    }
 
-//     if (!$stmt->execute()) {
-//       echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
-//     }
+    if (!$stmt->execute()) {
+      echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
+    }
 
-//     if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
-//       echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-//     }
-//   } 
+    if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
+      echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+    }
+  } 
 
-// else {
+else {
 
     //query table with all movies
 
@@ -137,7 +139,7 @@ $check = NULL;
   if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
     echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
   }
-//}
+}
     
 // output table of movies
 
