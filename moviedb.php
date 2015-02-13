@@ -64,7 +64,7 @@ if (!$mysqli->query('DESCRIBE video_store')) {
 
 // category drop down menu
 
-if (!($stmt2 = $mysqli->prepare("SELECT DISTINCT category FROM video_store ORDER BY category ASC"))) {
+if (!($stmt2 = $mysqli->prepare("SELECT DISTINCT category FROM video_store WHERE category != '' ORDER BY category ASC"))) {
   echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
 if (!$stmt2->execute()) {
@@ -91,7 +91,7 @@ $minutes = NULL;
 $rented = NULL;
 $available = NULL;
 $check = NULL;
-$categories = NULL;
+
 
 // select films to list in table
 
