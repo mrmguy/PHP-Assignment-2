@@ -54,6 +54,30 @@ if (!$mysqli->query($sqt)) {
 </body>
 </html>
 <?php
+
+
+if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store"))) {
+    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+if (!$stmt->execute()) {
+    echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+$name    = NULL;
+$category = NULL;
+$minutes = NULL;
+$rented = NULL;
+if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
+    echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+}
+
+echo '<p>';
+  echo '<table border = 1>';
+  echo '<tr><td>name</td><td>category</td><td>length</td><td>availability</td></tr>';
+while ($stmt->fetch()) {
+    echo '<tr><td>' . $name . '</td><td>' . $category . '</td><td>' . $minutes . '</td><td>' . $rented . '</td><td></tr>';
+}
 // /* Prepared statement, stage 1: prepare */
 // if (!($stmt = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
 //      echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
