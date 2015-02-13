@@ -79,7 +79,9 @@ echo '<select name = "categories">';
 while ($stmt2->fetch()) {
   echo '<option value = "' . $categorylist . '">' . $categorylist . '</option>';
 }
+if ($categorylist) {
 echo '<option value = "All">All</option>';
+}
 echo '<input type = "submit">';
 echo '</form>';
 
