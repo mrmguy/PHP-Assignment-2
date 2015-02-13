@@ -48,14 +48,37 @@ if (!$mysqli->query($sqt)) {
 <form action="deleteall.php">
 	<input type="submit" value="Delete all films">
 
-</form>
-
 
 </body>
 </html>
 <?php
 
 
+// select categories for drop down menu
+if (!($stmt2 = $mysqli->prepare("SELECT category FROM video_store"))) {
+    echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+
+if (!$stmt2->execute()) {
+    echo "Execute failed: (" . $mysqli->errno . ") " . $mysqli->error;
+}
+$categorylist = NULL;
+if (!$stmt2->bind_result($categorylist)) {
+    echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+}
+
+echo '<form action="changetable.php" method="get">';
+echo '<select name = "categories">';
+while ($stmt2->fetch()) {
+    echo '<option value = "' . $categorylist . '">' . $categorylist . '</option>';
+}
+echo '<input type = "submit">';
+echo '</form>';
+
+
+
+
+// select films to list in table
 if (!($stmt = $mysqli->prepare("SELECT name, category, length, rented FROM video_store"))) {
     echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 }
