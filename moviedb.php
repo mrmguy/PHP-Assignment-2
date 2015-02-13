@@ -68,16 +68,32 @@ $name    = NULL;
 $category = NULL;
 $minutes = NULL;
 $rented = NULL;
+$available = NULL;
+$check = NULL;
 if (!$stmt->bind_result($name, $category, $minutes, $rented)) {
     echo "Binding output parameters failed: (" . $stmt->errno . ") " . $stmt->error;
 }
 
+
 echo '<p>';
   echo '<table border = 1>';
-  echo '<tr><td>name</td><td>category</td><td>length</td><td>availability</td></tr>';
+  echo '<tr><td>name</td><td>category</td><td>length</td><td>availability</td><td></td><td></td></tr>';
 while ($stmt->fetch()) {
-    echo '<tr><td>' . $name . '</td><td>' . $category . '</td><td>' . $minutes . '</td><td>' . $rented . '</td><td></tr>';
+    if ($rented) { 
+        $available = "available";
+        $check = "check out";
+    } else {
+        $available = "checked out";
+        $check = "check in";
+    }
+    echo '<form action ="changemovie.php" method="post">';
+    echo '<tr><td>' . $name . '</td><td>' . $category . '</td><td>' . $minutes . '</td><td>' . $available . '</td>
+    <input type = "hidden" name = "name" value = "'.$name.'">
+    <td><input type="submit" value="Delete"></td>
+    <td><input type="submit" name = "check" value="'.$check.'"</td></tr>';
+    echo '</form>';
 }
+
 // /* Prepared statement, stage 1: prepare */
 // if (!($stmt = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
 //      echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;

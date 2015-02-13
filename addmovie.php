@@ -47,7 +47,7 @@ if (!$stmt->bind_param("ssi", $name, $category, $minutes)) {
 
 if (!$stmt->execute()) {
     echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-
+}
 
 
 // /* Prepared statement: repeated execution, only data transferred from client to server */
