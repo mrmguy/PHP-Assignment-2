@@ -1,0 +1,39 @@
+Start: Fri, 13 Feb 2015 15:05:37 -0800 
+End: Fri, 13 Feb 2015 15:57:37 -0800 
+Tasks: minor edits for functionality on OSU server 
+
+Start: Fri, 13 Feb 2015 14:10:10 -0800 
+End: Fri, 13 Feb 2015 14:50:10 -0800 
+Tasks: display category functionality and formatting 
+
+Start: Fri, 13 Feb 2015 14:03:27 -0800 
+End: Fri, 13 Feb 2015 14:06:27 -0800 
+Tasks: blank menu when no category 
+
+Start: Fri, 13 Feb 2015 14:00:54 -0800 
+End: Fri, 13 Feb 2015 14:02:54 -0800 
+Tasks: fixed category from displaying blank category 
+
+Start: Fri, 13 Feb 2015 11:55:12 -0800 
+End: Fri, 13 Feb 2015 13:51:12 -0800 
+Tasks: added functionality to error handling 
+
+Start: Thu, 12 Feb 2015 19:00:55 -0800 
+End: Thu, 12 Feb 2015 19:20:55 -0800 
+Tasks: added delete all movies and categories pull down menu 
+
+Start: Thu, 12 Feb 2015 17:10:00 -0800 
+End: Thu, 12 Feb 2015 18:52:00 -0800 
+Tasks: added check in/out and delete movie 
+
+Start: Thu, 12 Feb 2015 16:30:07 -0800 
+End: Thu, 12 Feb 2015 17:02:07 -0800 
+Tasks: added functionality to output table of movies 
+
+Start: Thu, 12 Feb 2015 15:45:49 -0800 
+End: Thu, 12 Feb 2015 16:14:49 -0800 
+Tasks: added form ability to add items to database 
+
+Start: Thu, 12 Feb 2015 12:36:11 -0800 
+End: Thu, 12 Feb 2015 15:36:11 -0800 
+Tasks: initial db creation and form for movie submission 
